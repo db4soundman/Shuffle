@@ -1,6 +1,6 @@
 #include "testApp.h"
+#include "LinkedList.h"
 #include "ArrayQueue.h"
-
 /* READ THIS FIRST!
  *
  * Before you do any development, you will need to tell the IDE where the openFrameworks libraries are installed.
@@ -151,9 +151,42 @@ void testApp::doRandExperiment(){
 }
 
 void shuffle(unsigned int cards[], unsigned int len){
-    //TODO Replace this with your own function that simulates the shuffling of a deck
-    // of cards
-    randomize(cards,len);
+
+    LinkedList<unsigned int> deck;
+    
+    for (unsigned int i = 0; i<len; i++) {
+        deck.add(i,cards[i]);
+    }
+    
+    ArrayQueue<unsigned int> splitDeck1;
+    ArrayQueue<unsigned int> splitDeck2;
+    ArrayQueue<unsigned int> splitDeck3;
+    ArrayQueue<unsigned int> splitDeck4;
+    unsigned int randomNumber = 0;
+    while (deck.size()!=0) {
+        while (splitDeck1.getNumItems()<13) {
+            randomNumber = (unsigned int)(rand() % deck.size());
+            splitDeck1.add(deck.get(randomNumber));
+            deck.remove(randomNumber);
+        }
+        while (splitDeck2.getNumItems()<13) {
+            randomNumber = (unsigned int)(rand() % deck.size());
+            splitDeck2.add(deck.get(randomNumber));
+            deck.remove(randomNumber);
+        }
+        while (splitDeck3.getNumItems()<13) {
+            randomNumber = (unsigned int)(rand() % deck.size());
+            splitDeck3.add(deck.get(randomNumber));
+            deck.remove(randomNumber);
+        }
+        while (splitDeck4.getNumItems()<13) {
+            randomNumber = (unsigned int)(rand() % deck.size());
+            splitDeck4.add(deck.get(randomNumber));
+            deck.remove(randomNumber);
+        }
+        
+    }
+    
 }
 
 void testApp::doShuffleExperiment(int numShuffles){
