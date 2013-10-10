@@ -16,9 +16,9 @@
 
 //How many experiments should we do between each re-draw of the screen?
 // Bigger numbers make the program much faster
-#define EXPS_PER_UPDATE 2
+#define EXPS_PER_UPDATE 100
 //How many times should I call shuffle before measuring the result?
-#define SHUFFLES_PER_EXP 1
+#define SHUFFLES_PER_EXP 5
 
 //--------------------------------------------------------------
 void testApp::setup(){
@@ -153,39 +153,40 @@ void testApp::doRandExperiment(){
 void shuffle(unsigned int cards[], unsigned int len){
 
     LinkedList<unsigned int> deck;
+    LinkedList<unsigned int> splitMiddle;
+    LinkedList<unsigned int> splitTop;
     
     for (unsigned int i = 0; i<len; i++) {
         deck.add(i,cards[i]);
     }
     
-    ArrayQueue<unsigned int> splitDeck1;
-    ArrayQueue<unsigned int> splitDeck2;
-    ArrayQueue<unsigned int> splitDeck3;
-    ArrayQueue<unsigned int> splitDeck4;
-    unsigned int randomNumber = 0;
-    while (deck.size()!=0) {
-        while (splitDeck1.getNumItems()<13) {
-            randomNumber = (unsigned int)(rand() % deck.size());
-            splitDeck1.add(deck.get(randomNumber));
-            deck.remove(randomNumber);
-        }
-        while (splitDeck2.getNumItems()<13) {
-            randomNumber = (unsigned int)(rand() % deck.size());
-            splitDeck2.add(deck.get(randomNumber));
-            deck.remove(randomNumber);
-        }
-        while (splitDeck3.getNumItems()<13) {
-            randomNumber = (unsigned int)(rand() % deck.size());
-            splitDeck3.add(deck.get(randomNumber));
-            deck.remove(randomNumber);
-        }
-        while (splitDeck4.getNumItems()<13) {
-            randomNumber = (unsigned int)(rand() % deck.size());
-            splitDeck4.add(deck.get(randomNumber));
-            deck.remove(randomNumber);
-        }
-        
+    unsigned int placeToSplitFrom = 1 + (rand()%50);
+    
+    deck.splice(0, placeToSplitFrom, splitTop, 0);
+    splitTop.splice(0, splitTop.size(), deck, 1+(rand()%deck.size()));
+
+    
+    //Having the 1 + random number ensures that the deck will be split.
+    unsigned int length = 1 + (rand()%len);
+
+    deck.splice(0, length, splitMiddle, 0);
+    //std::cout<<deck.size();
+    while (splitMiddle.size()>0) {
+        length = 1+(rand() %splitMiddle.size());
+      
+        splitMiddle.splice(0, length, deck, 0);
+       // std::cout<<deck.size();
     }
+    
+    for (unsigned int i =0; i<52;i++) {
+        cards[i] = deck.get(0);
+        deck.remove(0);
+    }
+    
+//    delete deck;
+//    delete splitTop;
+//    delete splitMiddle;
+
     
 }
 
